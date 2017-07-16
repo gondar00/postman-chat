@@ -1,0 +1,48 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Shahrukh",
+      "online": true,
+      "meta": {},
+      "threads": [
+        {
+          "id": 1,
+          "user" : 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Salman",
+      "online": true,
+      "meta": {},
+      "threads": [
+        {
+          "id": 1,
+          "user": 1
+        }
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "id": 1,
+      "details": {},
+      "messages": [
+        {
+          "user-id": 1,
+          "type": 0,
+          "payload": "I am a message from user1",
+          "date": "date"
+        },
+        {
+          "user-id": 2,
+          "type": 0,
+          "payload": "I am a message from user2",
+          "date": "date"
+        }
+      ]
+    }
+  ]
+}

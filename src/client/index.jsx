@@ -15,7 +15,6 @@ import InitStore from '../server/init-store'
 import App from '../shared/app'
 import { APP_CONTAINER_SELECTOR, JSS_SSR_SELECTOR } from '../shared/config'
 // import { isProd } from '../shared/util'
-import setUpSocket from './socket'
 
 window.jQuery = $
 window.Tether = Tether
@@ -51,5 +50,3 @@ if (module.hot) {
 const jssServerSide = document.querySelector(JSS_SSR_SELECTOR)
 // flow-disable-next-line
 jssServerSide.parentNode.removeChild(jssServerSide)
-
-setUpSocket(store)

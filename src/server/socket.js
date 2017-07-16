@@ -3,9 +3,9 @@
 import {
   IO_CONNECT,
   IO_DISCONNECT,
-  IO_CLIENT_JOIN_ROOM,
-  IO_CLIENT_HELLO,
-  IO_SERVER_HELLO,
+  IO_CLIENT_JOIN_CHAT,
+  IO_CLIENT_LEAVE_CHAT,
+  IO_CLIENT_NEW_CHAT_MESSAGE,
 } from '../shared/config'
 
 /* eslint-disable no-console */
@@ -13,19 +13,16 @@ const setUpSocket = (io: Object) => {
   io.on(IO_CONNECT, (socket) => {
     console.log('[socket.io] A client connected.')
 
-    socket.on(IO_CLIENT_JOIN_ROOM, (room) => {
-      socket.join(room)
-      console.log(`[socket.io] A client joined room ${room}.`)
-
-      io.emit(IO_SERVER_HELLO, 'Hello everyone!')
-      io.to(room).emit(IO_SERVER_HELLO, `Hello clients of room ${room}!`)
-      socket.emit(IO_SERVER_HELLO, 'Hello you!')
+    socket.on(IO_CLIENT_JOIN_CHAT, (thread) => {
+      socket.join(thread.id)
+      console.log(`[socket.io] A client joined thread ${thread.id}.`)
     })
-
-    socket.on(IO_CLIENT_HELLO, (clientMessage) => {
-      console.log(`[socket.io] Client: ${clientMessage}`)
+    socket.on(IO_CLIENT_LEAVE_CHAT, (chat) => {
+      socket.leave(chat.id)
     })
-
+    socket.on(IO_CLIENT_NEW_CHAT_MESSAGE, (data) => {
+      socket.broadcast.to(data.id).emit(IO_CLIENT_NEW_CHAT_MESSAGE, data)
+    })
     socket.on(IO_DISCONNECT, () => {
       console.log('[socket.io] A client disconnected.')
     })
