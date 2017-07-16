@@ -1,0 +1,36 @@
+export default {
+  message: {
+    display: 'block',
+    width: '99%',
+    padding: '0.5%',
+  },
+  messageHolder: {
+    margin: 0,
+  },
+  sender: {
+    background: '#E5E5EA',
+    color: 'black',
+    float: 'left',
+    maxWidth: '50%',
+    wordWrap: 'break-word',
+    marginBottom: '20px',
+    position: 'relative',
+    padding: '10px 20px',
+    borderRadius: '25px',
+    clear: 'both',
+    font: '400 15px sans-serif',
+  },
+  receiver: {
+    maxWidth: '50%',
+    wordWrap: 'break-word',
+    marginBottom: '20px',
+    background: '#00e34d',
+    color: 'white',
+    float: 'right',
+    clear: 'both',
+    position: 'relative',
+    padding: '10px 20px',
+    borderRadius: '25px',
+    font: '400 15px sans-serif',
+  },
+}

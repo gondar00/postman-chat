@@ -14,14 +14,13 @@ import {
 } from './routes'
 
 const App = () =>
-  <div style={{ paddingTop: 54 }}>
+  <div style={{ height: '100%', paddingTop: 54 }}>
     <Helmet titleTemplate={`%s | ${APP_NAME}`} defaultTitle={APP_NAME} />
     <Nav />
     <Switch>
       <Route exact path={HOME_PAGE_ROUTE} render={() => <HomePage />} />
       <Route component={NotFoundPage} />
     </Switch>
-    <Footer />
   </div>
 
 export default App
