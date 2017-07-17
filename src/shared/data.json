@@ -2,7 +2,7 @@
   "users": [
     {
       "id": 1,
-      "name": "Shahrukh",
+      "name": "USER-1",
       "online": true,
       "meta": {},
       "threads": [
@@ -18,7 +18,7 @@
     },
     {
       "id": 2,
-      "name": "Salman",
+      "name": "USER-2",
       "online": true,
       "meta": {},
       "threads": [
@@ -34,7 +34,7 @@
     },
     {
       "id": 3,
-      "name": "Aamir",
+      "name": "USER-3",
       "online": true,
       "meta": {},
       "threads": [

@@ -19,7 +19,7 @@ const Friend = ({ friend, classes, updateThread }) => (
 )
 const FriendList = ({ classes, friends, currentUserId, updateThread }: Props) => (
   <ul className="list-group">
-    {friends.map((friend) => { if (currentUserId !== friend.get('id')) return (<Friend friend={friend} classes={classes} updateThread={updateThread} />) })}
+    {friends.map((friend) => { if (currentUserId !== friend.get('id')) return (<Friend key={friend.get('id')} friend={friend} classes={classes} updateThread={updateThread} />) })}
   </ul>
 )
 

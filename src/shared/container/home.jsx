@@ -7,6 +7,7 @@ import Helmet from 'react-helmet'
 import injectSheet from 'react-jss'
 import classnames from 'classnames'
 import { fromJS } from 'immutable'
+import isEmpty from 'lodash/isEmpty'
 import FriendList from '../component/friend-list'
 import MessageList from '../component/message-list'
 import Input from '../component/input'
@@ -75,6 +76,7 @@ class HomePage extends React.Component {
     })
     this.handleNewMessage = this.handleNewMessage.bind(this)
     this.handleMessageChange = this.handleMessageChange.bind(this)
+    this.handleFilterChange = this.handleFilterChange.bind(this)
     this.updateChatFromSockets = this.updateChatFromSockets.bind(this)
     this.updateCurrentThread = this.updateCurrentThread.bind(this)
   }
@@ -131,6 +133,17 @@ class HomePage extends React.Component {
       message: e.target.value,
     })
   }
+  handleFilterChange(e) {
+    const query = e.target.value.toLowerCase()
+    if (isEmpty(query)) this.setState({ userData: this.props.userData })
+    else {
+      const { userData } = this.state
+      const filteredUserData = userData.get('users').filter(user => user.get('name').toLowerCase().includes(query))
+      this.setState({
+        userData: userData.set('users', filteredUserData),
+      })
+    }
+  }
   updateCurrentThread(userId) {
     const { currentUser } = this.props
     const currentThread = currentUser.get('threads').find(thread => thread.get('user') === userId)
@@ -166,7 +179,7 @@ class HomePage extends React.Component {
                   <h4 className="card-title">Hi, {currentUser.get('name')}</h4>
                 </div>
               </div>
-              <Input placeholder="Search" />
+              <Input placeholder="Search" onChange={this.handleFilterChange} />
               <FriendList friends={userData.get('users')} currentUserId={currentUser.get('id')} updateThread={this.updateCurrentThread} />
             </div>
             <div className="col-md-8 mt-4 mb-4">
