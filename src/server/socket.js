@@ -13,9 +13,9 @@ const setUpSocket = (io: Object) => {
   io.on(IO_CONNECT, (socket) => {
     console.log('[socket.io] A client connected.')
 
-    socket.on(IO_CLIENT_JOIN_CHAT, (thread) => {
-      socket.join(thread.id)
-      console.log(`[socket.io] A client joined thread ${thread.id}.`)
+    socket.on(IO_CLIENT_JOIN_CHAT, (id) => {
+      socket.join(id)
+      console.log(`[socket.io] A client joined thread ${id}.`)
     })
     socket.on(IO_CLIENT_LEAVE_CHAT, (chat) => {
       socket.leave(chat.id)

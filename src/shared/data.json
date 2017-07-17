@@ -8,7 +8,11 @@
       "threads": [
         {
           "id": 1,
-          "user" : 2
+          "user": 2
+        },
+        {
+          "id": 2,
+          "user": 3
         }
       ]
     },
@@ -21,12 +25,32 @@
         {
           "id": 1,
           "user": 1
+        },
+        {
+          "id": 3,
+          "user": 3
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Aamir",
+      "online": true,
+      "meta": {},
+      "threads": [
+        {
+          "id": 2,
+          "user": 1
+        },
+        {
+          "id": 3,
+          "user": 2
         }
       ]
     }
   ],
-  "threads": [
-    {
+  "threads": {
+    "1": {
       "id": 1,
       "details": {},
       "messages": [
@@ -34,15 +58,51 @@
           "user-id": 1,
           "type": 0,
           "payload": "I am a message from user1",
-          "date": "date"
+          "date": "17/07/2017, 13:56:57"
         },
         {
           "user-id": 2,
           "type": 0,
           "payload": "I am a message from user2",
-          "date": "date"
+          "date": "17/07/2017, 13:56:57"
+        }
+      ]
+    },
+    "2": {
+      "id": 2,
+      "details": {},
+      "messages": [
+        {
+          "user-id": 1,
+          "type": 0,
+          "payload": "I am a message from user1",
+          "date": "17/07/2017, 13:56:57"
+        },
+        {
+          "user-id": 3,
+          "type": 0,
+          "payload": "I am a message from user3",
+          "date": "17/07/2017, 13:56:57"
+        }
+      ]
+    },
+    "3": {
+      "id": 3,
+      "details": {},
+      "messages": [
+        {
+          "user-id": 2,
+          "type": 0,
+          "payload": "I am a message from user2",
+          "date": "17/07/2017, 13:56:57"
+        },
+        {
+          "user-id": 3,
+          "type": 0,
+          "payload": "I am a message from user3",
+          "date": "17/07/2017, 13:56:57"
         }
       ]
     }
-  ]
+  }
 }

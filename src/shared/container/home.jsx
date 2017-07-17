@@ -11,7 +11,7 @@ import FriendList from '../component/friend-list'
 import MessageList from '../component/message-list'
 import Input from '../component/input'
 import { IO_CLIENT_JOIN_CHAT, IO_CLIENT_LEAVE_CHAT, IO_CLIENT_NEW_CHAT_MESSAGE, APP_NAME } from '../config'
-import { getData } from '../action/home'
+import { getData, getRandomCurrentUser } from '../action/home'
 
 const socket = socketIOClient('http://localhost:8000')
 
@@ -61,24 +61,31 @@ const styles = {
 }
 type Props = {
   classes: Object,
+  userData: Immutable.Map,
+  currentUser: Immutable.Map,
+  getUserData: Function,
+  getRandomUser: Function,
 }
 class HomePage extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { userData: fromJS([]), message: '' }
+    this.state = { userData: fromJS([]), message: '', currentThread: 0 }
     socket.on(IO_CLIENT_NEW_CHAT_MESSAGE, (payload) => {
       this.updateChatFromSockets(payload)
     })
     this.handleNewMessage = this.handleNewMessage.bind(this)
     this.handleMessageChange = this.handleMessageChange.bind(this)
     this.updateChatFromSockets = this.updateChatFromSockets.bind(this)
+    this.updateCurrentThread = this.updateCurrentThread.bind(this)
   }
   componentDidMount() {
-    const { userData, getUserData } = this.props
+    const { userData, getUserData, getRandomUser } = this.props
+    // const { currentThread } = this.state
     if (userData.size === 0) {
+      getRandomUser()
       getUserData()
     } else {
-      socket.emit(IO_CLIENT_JOIN_CHAT, userData.toJS().threads[0])
+      // socket.emit(IO_CLIENT_JOIN_CHAT, userData.toJS().threads[currentThread])
       this.setState({
         userData,
       })
@@ -87,7 +94,7 @@ class HomePage extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.userData !== this.state.userData) {
       const { userData } = nextProps
-      socket.emit(IO_CLIENT_JOIN_CHAT, userData.toJS().threads[0])
+      // socket.emit(IO_CLIENT_JOIN_CHAT, userData.toJS().threads[currentThread])
       this.setState({
         userData,
       })
@@ -100,17 +107,18 @@ class HomePage extends React.Component {
   // }
   handleNewMessage(e) {
     e.preventDefault()
-    const { userData, message } = this.state
+    const { currentUser } = this.props
+    const { userData, message, currentThread } = this.state
     const tempUserData = userData.toJS()
     const newMessage = {
-      'user-id': 1,
+      'user-id': currentUser.get('id'),
       type: 0,
       payload: message,
-      date: 'date',
+      date: new Date().toLocaleString(),
     }
-    tempUserData.threads[0].messages.push(newMessage)
+    tempUserData.threads[currentThread].messages.push(newMessage)
     socket.emit(IO_CLIENT_NEW_CHAT_MESSAGE, {
-      id: tempUserData.threads[0].id,
+      id: tempUserData.threads[currentThread].id,
       userData: tempUserData,
     })
     this.setState({
@@ -123,6 +131,15 @@ class HomePage extends React.Component {
       message: e.target.value,
     })
   }
+  updateCurrentThread(userId) {
+    const { currentUser } = this.props
+    const currentThread = currentUser.get('threads').find(thread => thread.get('user') === userId)
+    this.setState({
+      currentThread: currentThread.get('id'),
+    })
+    socket.emit(IO_CLIENT_JOIN_CHAT, currentThread.get('id'))
+    // jOin and leave chat
+  }
   updateChatFromSockets(payload) {
     this.setState({
       userData: fromJS(payload.userData),
@@ -130,8 +147,8 @@ class HomePage extends React.Component {
   }
   props: Props
   render() {
-    const { classes } = this.props
-    const { userData, message } = this.state
+    const { classes, currentUser } = this.props
+    const { userData, message, currentThread } = this.state
     if (userData.size === 0) return (<span>Loading</span>)
     return (
       <div>
@@ -144,14 +161,19 @@ class HomePage extends React.Component {
         <div className="container">
           <div className={classnames(classes.h600, 'row')}>
             <div className="col-md-4 mt-4 mb-4">
+              <div className="card">
+                <div className="card-block">
+                  <h4 className="card-title">Hi, {currentUser.get('name')}</h4>
+                </div>
+              </div>
               <Input placeholder="Search" />
-              <FriendList friends={userData.get('users')} />
+              <FriendList friends={userData.get('users')} currentUserId={currentUser.get('id')} updateThread={this.updateCurrentThread} />
             </div>
             <div className="col-md-8 mt-4 mb-4">
               <form className={classes.chat} onSubmit={this.handleNewMessage}>
                 <span className={classes.loading} />
                 <div className={classes.messages} id="postmanchat">
-                  <MessageList messages={userData.get('threads').first().get('messages')} />
+                  {currentThread === 0 ? <span>Click on a contact to start a chat</span> : <MessageList messages={userData.get('threads').get(currentThread.toString()).get('messages')} currentUserId={currentUser.get('id')} />}
                 </div>
                 <Input type="text" placeholder="Your message" value={message} onChange={this.handleMessageChange} />
               </form>
@@ -165,10 +187,12 @@ class HomePage extends React.Component {
 
 const mapStateToProps = state => ({
   userData: state.home.get('data'),
+  currentUser: state.home.get('currentUser'),
 })
 
 const mapDispatchToProps = dispatch => ({
-  getUserData: (id) => dispatch(getData(1)),
+  getUserData: (id) => dispatch(getData()),
+  getRandomUser: () => dispatch(getRandomCurrentUser()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(
